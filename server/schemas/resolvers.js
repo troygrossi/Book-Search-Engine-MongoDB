@@ -2,6 +2,9 @@ const {User} = require("../models");
 
 const resolvers = {
     Query: {
+        me: (parent, args, context)=>{
+            return
+        },
         users: ()=>{
             return User.find();
         }

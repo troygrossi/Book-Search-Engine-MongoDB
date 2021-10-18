@@ -22,6 +22,7 @@ type Auth{
 }
 type Query {
     users: [User]
+    me: User
 }
 type Mutation {
     addUser(username: String!, email: String!, password: String!): User
