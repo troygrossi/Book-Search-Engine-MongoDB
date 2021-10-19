@@ -1,18 +1,41 @@
 const {User} = require("../models");
+const { signToken } = require("../utils/auth");
 
 const resolvers = {
     Query: {
-        me: (parent, args, context)=>{
-            return
-        },
+        me: async (parent, args, context) => {
+            if (context.user) {
+              const userData = await User.findOne({ _id: context.user._id });
+      
+              return userData;
+            }
+            throw new AuthenticationError("Not logged in");
+          },
         users: ()=>{
             return User.find();
         }
     },
     Mutation: {
+
         addUser: (parent, args)=>{
             return User.create(args);
         },
+        login: async (parent, { email, password }) => {
+            const user = await User.findOne({ email });
+      
+            if (!user) {
+              throw new AuthenticationError("Incorrect credentials");
+            }
+      
+            const correctPw = await user.isCorrectPassword(password);
+      
+            if (!correctPw) {
+              throw new AuthenticationError("Incorrect credentials");
+            }
+      
+            const token = signToken(user);
+            return { token, user };
+          },
         saveBook: (parent, args)=>{
             const newBook = {
                 authors: args.authors,
