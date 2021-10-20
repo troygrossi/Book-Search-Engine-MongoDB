@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
-import { getMe, deleteBook } from '../utils/API';
-import Auth from '../utils/auth';
-import { removeBookId } from '../utils/localStorage';
+// import { getMe, deleteBook } from '../utils-old/API';
+// import Auth from '../utils-old/auth';
+// import { removeBookId } from '../utils-old/localStorage';
+
+import { useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import {GET_ME} from '../utils-new/queries';
+import {REMOVE_BOOK} from '../utils-new/mutations';
+import Auth from '../utils-new/auth';
+import { removeBookId } from '../utils-new/localStorage';
 
 const SavedBooks = () => {
+  // Client Queries
+  const { loading, data } = useQuery(GET_ME);
+  //Client Mutations
+  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+
   const [userData, setUserData] = useState({});
 
   // use this to determine if `useEffect()` hook needs to run again
@@ -20,14 +32,15 @@ const SavedBooks = () => {
           return false;
         }
 
-        const response = await getMe(token);
-
-        if (!response.ok) {
-          throw new Error('something went wrong!');
+        // const response = await getMe(token);
+        // if (!response.ok) {
+        //   throw new Error('something went wrong!');
+        // }
+        // const user = await response.json();
+        if(!loading){
+          const user = data.me
+          setUserData(user);
         }
-
-        const user = await response.json();
-        setUserData(user);
       } catch (err) {
         console.error(err);
       }
@@ -45,18 +58,23 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = await deleteBook(bookId, token);
+      // const response = await deleteBook(bookId, token);
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      // }
+      // const updatedUser = await response.json();
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const updatedUser = await response.json();
+      const updatedUser = removeBook({
+        variables: {
+          _id: bookId,
+        }
+      })
       setUserData(updatedUser);
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
       console.error(err);
+      console.log(error)
     }
   };
 

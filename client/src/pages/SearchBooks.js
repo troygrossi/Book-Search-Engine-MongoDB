@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
 
-import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
-import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
+// import Auth from '../utils-old/auth';
+// import { saveBook, searchGoogleBooks } from '../utils-old/API';
+// import { saveBookIds, getSavedBookIds } from '../utils-old/localStorage';
+import Auth from '../utils-new/auth';
+import { saveBook, searchGoogleBooks } from '../utils-new/API';
+import { saveBookIds, getSavedBookIds } from '../utils-new/localStorage';
+
 
 const SearchBooks = () => {
   // create state for holding returned google api data
