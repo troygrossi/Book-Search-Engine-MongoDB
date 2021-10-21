@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
-// import { getMe, deleteBook } from '../utils-old/API';
-// import Auth from '../utils-old/auth';
-// import { removeBookId } from '../utils-old/localStorage';
+// import { getMe, deleteBook } from '../utilsold/API';
+// import Auth from '../utilsold/auth';
+// import { removeBookId } from '../utilsold/localStorage';
 
 import { useQuery } from "@apollo/client";
 import { useMutation } from "@apollo/client";
-import {GET_ME} from '../utils-new/queries';
-import {REMOVE_BOOK} from '../utils-new/mutations';
-import Auth from '../utils-new/auth';
-import { removeBookId } from '../utils-new/localStorage';
+import {GET_ME} from '../utilsnew/queries';
+import {REMOVE_BOOK} from '../utilsnew/mutations';
+import Auth from '../utilsnew/auth.js';
+import { removeBookId } from '../utilsnew/localStorage';
 
 const SavedBooks = () => {
   // Client Queries
@@ -64,12 +64,12 @@ const SavedBooks = () => {
       // }
       // const updatedUser = await response.json();
 
-      const updatedUser = removeBook({
+      const {data} = await removeBook({
         variables: {
-          _id: bookId,
+          bookId,
         }
       })
-      setUserData(updatedUser);
+      setUserData({...data.removeBook});
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {

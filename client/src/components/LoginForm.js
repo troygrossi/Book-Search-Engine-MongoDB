@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-// import { loginUser } from '../utils-old/API';
-// import Auth from '../utils-old/auth';
+// import { loginUser } from '../utilsold/API';
+// import Auth from '../utilsold/auth';
 
 import { useMutation } from "@apollo/client";
-import { LOGIN_USER } from '../utils-new/mutations';
-import Auth from '../utils-new/auth';
+import { LOGIN_USER } from '../utilsnew/mutations';
+import Auth from '../utilsnew/auth.js';
 
 const LoginForm = () => {
     // Client Mutations
@@ -38,10 +38,10 @@ const LoginForm = () => {
       //   throw new Error('something went wrong!');
       // }
       // const { token, user } = await response.json();
-      const {token, user} = loginUser({
-        variables: userFormData
+      const {data} = await loginUser({
+        variables: {...userFormData}
       })
-      console.log(user);
+      const token = data.login.token;
       Auth.login(token);
     } catch (err) {
       console.error(err);
